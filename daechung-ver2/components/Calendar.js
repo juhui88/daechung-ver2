@@ -71,7 +71,7 @@ export default function CalendarBar() {
   return (
     <div className="select-none">
     {yearClicked ?<div className="fixed top-0 bottom-0 z-10 w-screen h-srceen opacity-0" onClick={onClickYear}></div> : null}
-    <div className="">
+    <div className="bg-bgColor">
       <div className="relative px-5 pb-5 pt-2 text-sm m-2 ">
         <div className=" flex items-center flex-row space-x-1 ">
           <span className="text-gray-600 text-lg">{date.clone().format('YYYY')}</span>

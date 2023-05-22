@@ -5,4 +5,15 @@
 
 body {
   font-family: 'Roboto Condensed', sans-serif;
+
+}
+.content {
+  display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.textarea {
+  background-size: 10px, 30px, 10px 10px, 30px 30px;
+    background-image: linear-gradient(90deg, #00000004 1px, transparent 1px), linear-gradient(90deg, #00000004 1px, transparent 1px), linear-gradient(#00000004 1px, transparent 1px), linear-gradient(#00000004 1px, transparent 1px);
 }

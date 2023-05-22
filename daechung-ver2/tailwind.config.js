@@ -8,7 +8,8 @@ module.exports = {
     extend:{
       colors:{
         mainColor:"#D8E6E4",
-        pointColor: "#4C7B90"
+        pointColor: "#4C7B90",
+        bgColor:"#fdffff"
       }
     }
     
