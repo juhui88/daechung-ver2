@@ -15,7 +15,8 @@ const Profile = tw.div`
   my-4
   space-x-2
   cursor-pointer
-  ml-16
+  ml-9
+  sm:ml-16
 `
 const CateItem = tw.div`
   bg-[#F0F0F0]

@@ -7,8 +7,7 @@ const Layout = ({children}) => {
     const router = useRouter()
     const [width, setWidth] = useState(false)
 
-    console.log(isMobile)
-    console.log(router.pathname)
+
     return (
         <div className='w-screen flex flex-col h-screen'>
             <div className='w-full sm:w-[640px] flex-grow mx-auto  border-l border-r mb-[52px] '>

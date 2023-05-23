@@ -5,7 +5,7 @@
 
 body {
   font-family: 'Roboto Condensed', sans-serif;
-
+  overflow-x: hidden;
 }
 .content {
   display: -webkit-box;
