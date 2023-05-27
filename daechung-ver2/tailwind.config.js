@@ -9,7 +9,8 @@ module.exports = {
       colors:{
         mainColor:"#D8E6E4",
         pointColor: "#4C7B90",
-        bgColor:"#fdffff"
+        bgColor:"#FAFCFC",
+        textColor:"#565656"
       }
     }
     

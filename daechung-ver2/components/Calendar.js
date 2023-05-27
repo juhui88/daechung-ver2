@@ -69,9 +69,9 @@ export default function CalendarBar() {
   const handleSelectedYear = (num) => num ? setSelectedYear(selectedYear + 12): setSelectedYear(selectedYear - 12);
   
   return (
-    <div className="select-none">
-    {yearClicked ?<div className="fixed top-0 bottom-0 z-10 w-screen h-srceen opacity-0" onClick={onClickYear}></div> : null}
-    <div className="bg-bgColor">
+    <div className="select-none bg-bgColor w-full px-12">
+    {yearClicked ?<div className="opacity-0 fixed top-0 left-0 bottom-0 z-10 w-screen h-srceen " onClick={onClickYear}></div> : null}
+    <div className="">
       <div className="relative px-5 pb-5 pt-2 text-sm m-2 ">
         <div className=" flex items-center flex-row space-x-1 ">
           <span className="text-gray-600 text-lg">{date.clone().format('YYYY')}</span>
@@ -83,20 +83,20 @@ export default function CalendarBar() {
         </div>
         <div className="flex justify-center items-center space-x-1  pb-5 ">
           <span onClick={()=>handleMonth(0)} className="cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
           </span>
-          <span className="w-20 text-center font-semibold text-xl" >{date.clone().format("MMMM")}</span>
+          <span className="w-20 text-center text-3xl" >{date.clone().format("MMMM")}</span>
           <span onClick={()=>handleMonth(1)} className="cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
           </span>
         </div>
         <div className="grid grid-cols-7 gap-10 justify-items-center items-center pt-3 pb-10">
           {dayOfWeek.map((d,i) => (
-              <span key={i} className="text-sm font-bold">{d}</span>
+              <span key={i} className="text-base font-bold">{d}</span>
           ))}
           </div>
         <div className="space-y-5 sm:space-y-10" >{buildCalendar()}</div>

@@ -36,17 +36,17 @@ const Bar = () => {
                 <Link href="/notes">
                     <IconWrap>
                         <div>
-                            <SlNote  size="25"/>
+                            <SlNote size="25"/>
                         </div>
                         <span className={cls("group-hover:underline", router.pathname === "/notes" ? "underline" :null )}>Note</span>
                     </IconWrap>    
                 </Link>
-                <Link href="profile">
+                <Link href="/portfolio">
                     <IconWrap>
                         <div>
                             <RxPerson  size="25"/>
                         </div>
-                        <span className={cls("group-hover:underline", router.pathname === "/profile" ? "underline" :null )}>Profile</span>
+                        <span className={cls("group-hover:underline", router.pathname === "/portfolio" ? "underline" :null )}>Portfolio</span>
                     </IconWrap>
                 </Link>
                 

@@ -29,16 +29,16 @@ export default function Main() {
 
   return(
     <Layout>
-        <div className='px-5 py-5 sm:py-10 '>
+        <div className='p-5 sm:py-10 '>
         <Profile>
             <Image src={profile} alt='profileImage' className='w-16 rounded-full border-[1px]'/>
-            <span>대충이</span>
+            <span className='font-bold'>대충이</span>
         </Profile>
-        <div className='relative flex flex-col items-center mt-3 mb-5 px-16'>
+        <div className='relative flex flex-col items-center mt-3 mb-5 '>
             <Image src = {pin} alt='pin' className='w-5 absolute -top-3 rotate-[30deg]'/> 
             <span className='bg-mainColor p-1 px-6 rounded-xl'>Calendar</span>
-            <div>
-            <Calendar/>
+            <div className='w-full'>
+              <Calendar/>
             </div>
         </div>
         <div className='space-y-2 mb-12'>

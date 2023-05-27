@@ -15,7 +15,7 @@ const Layout = ({children}) => {
             </div>
             
             <div>
-                {isMobile ? router.pathname === "/main" || router.pathname === "/notes" || router.pathname === "/profile" ? <Bar/> :null : <Bar/> }
+                {isMobile ? router.pathname === "/main" || router.pathname === "/notes" || router.pathname === "/porfolio" ? <Bar/> :null : router.pathname==="/login" ? null: <Bar/> }
             </div>   
 
             
