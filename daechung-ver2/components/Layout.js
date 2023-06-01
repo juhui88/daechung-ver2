@@ -9,11 +9,11 @@ const Layout = ({ children }) => {
   const [width, setWidth] = useState(false);
   console.log(router.pathname);
   return (
-    <div className="w-screen flex flex-col h-screen">
+    <div className="w-screen  h-screen">
       <div
         className={cls(
-          " sm:w-[640px] flex-grow mx-auto  border-l border-r mb-[52px] ",
-          router.pathname === "/" ? "w-screen" : "w-full"
+          " sm:w-[640px] flex-grow mx-auto  border-l border-r  ",
+          router.pathname === "/" ? "" : "mb-[52px]"
         )}
       >
         {children}
@@ -23,7 +23,7 @@ const Layout = ({ children }) => {
         {isMobile ? (
           router.pathname === "/main" ||
           router.pathname === "/notes" ||
-          router.pathname === "/porfolio" ? (
+          router.pathname === "/portfolio" ? (
             <Bar />
           ) : null
         ) : router.pathname === "/login" || router.pathname === "/" ? null : (
