@@ -4,10 +4,12 @@ import { Inter } from "@next/font/google";
 import Layout from "@/components/Layout";
 import 대충 from "../public/작업하는대충.png";
 import 사용예시 from "../public/사용예시.png";
+import kakaoLogo from "../public/kakaoLogo.png";
 import tw from "tailwind-styled-components";
 import styled from "styled-components";
 import Point from "@/components/mainCompo/Point";
 import ForWhom from "@/components/mainCompo/ForWhom";
+import Link from "next/link";
 
 const PointText = tw.div`
   text-3xl
@@ -93,7 +95,41 @@ export default function Home() {
           </div>
         </div>
       </Layout>
-      <div className="fixed top-0 right-20 bg-red-300">gd</div>
+      <div className="hidden lg:block lg:fixed top-10 right-10 xl:right-20 w-72 space-y-10">
+        <div className="bg-bgColor p-5 rounded-xl space-y-3 shadow-xl">
+          <div className="flex justify-between items-center">
+            <span className="text-lg text-pointColor ">
+              카카오톡으로 <br />
+              베타버전 시작하기!
+            </span>
+            <Image src={kakaoLogo} />
+          </div>
+          <div>
+            베타버전으로 회원가입 시 정식 버전 출시 후 무료로 프리미엄 구독을
+            하실 수 있습니다!
+          </div>
+        </div>
+        <Link
+          href="/login"
+          className="flex items-center shadow-lg p-5 rounded-xl justify-center bg-white text-xl hover:font-bold"
+        >
+          바로 시작하기
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
+            />
+          </svg>
+        </Link>
+      </div>
     </div>
   );
 }
