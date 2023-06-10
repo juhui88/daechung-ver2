@@ -58,7 +58,7 @@ export default function CalendarBar() {
                       "text-center hover:font-extrabold text-lg px-1",
                       isMonth ? "text-gray-200" : "",
                       !isMonth && isToday
-                        ? " bg-[#bed0d9] rounded-full px-2"
+                        ? " bg-[#bed0d9] rounded-full px-2 py-1"
                         : ""
                     )}
                   >

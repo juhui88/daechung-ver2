@@ -8,11 +8,11 @@ import Link from "next/link";
 const Login = () => {
   return (
     <Layout>
-      <div className="px-10 mt-20">
+      <div className="h-screen px-10 pt-20">
         <div className=" flex items-center space-x-2">
           <Image src={kakao} art="login" />
           <Link
-            href={`${process.env.NEXT_PUBLIC_API_URL}/auth/kakao/callback`}
+            href={`${process.env.NEXT_PUBLIC_API_URL}/auth/kakaoCallback`}
             className="border-[1px] border-textColor text-textColor text-xl rounded-2xl py-4 flex-grow text-center"
           >
             카카오톡으로 시작하기
