@@ -90,7 +90,7 @@ export default function Home() {
           <div className="my-20 mx-5">
             <Point />
           </div>
-          <div>
+          <div className="mx-5 my-20">
             <ForWhom />
           </div>
         </div>

@@ -106,6 +106,9 @@ export default function CalendarBar() {
       ? setSelectedYear(selectedYear + 12)
       : setSelectedYear(selectedYear - 12);
 
+  useEffect(() => {
+    /* axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`); */
+  });
   return (
     <div className="select-none bg-bgColor w-full">
       {yearClicked ? (

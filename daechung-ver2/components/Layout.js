@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
   const [width, setWidth] = useState(false);
   console.log(router.pathname);
   return (
-    <div className="w-screen  h-screen">
+    <div className="h-full">
       <div
         className={cls(
           " sm:w-[640px] flex-grow mx-auto  border-l border-r  ",
