@@ -45,6 +45,7 @@ const NoteDetail = () => {
   const [cateName, setCateName] = useState();
   const [editState, setEditState] = useState(false);
   const [editNoteId, setEditNoteId] = useState();
+  const [tempNote, setTempNote] = useState();
   const cateId = router.query.id;
 
   const onValid = (data) => {
@@ -137,12 +138,24 @@ const NoteDetail = () => {
         setCateName(res.data.cate.name);
       })
       .catch((err) => console.log(err));
+
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/temp-note/cate-id/${cateId}`)
+      .then((res) => {
+        console.log("tempNote", res);
+        setTempNote(res.data.tempNote);
+      })
+      .catch((err) => console.log(err));
   }, [change, setChange]);
   return (
     <Layout>
       <div className=" flex flex-col h-screen w-full">
         <div className="bg-mainColor flex-grow w-full">
-          <NoteBar title={cateName} id={router.query.id} />
+          <NoteBar
+            title={cateName}
+            cateId={cateId}
+            content={watch("content")}
+          />
 
           <div className="space-y-7 mt-20 mb-60 px-3 ">
             {notes?.map((note, i) => (
@@ -190,12 +203,14 @@ const NoteDetail = () => {
             ))}
           </div>
         </div>
+
         <div className="fixed bottom-10 w-[640px]">
           <form onSubmit={handleSubmit(onValid)} className="relative">
             <textarea
               onKeyDown={handleKeyDown}
               placeholder="내용을 입력하세요"
               {...register("content")}
+              defaultValue={tempNote?.content}
               className="textarea h-32 sm:h-44 w-full focus:outline-none p-2 placeholder:text-sm break-all normal-nums"
             />
             <label

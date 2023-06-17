@@ -4,11 +4,26 @@ import { BsChevronLeft } from "react-icons/bs";
 import { BiMenu } from "react-icons/bi";
 import { useRouter } from "next/router";
 import { cls } from "@/libs/utils";
+import axios from "axios";
 
-const NoteBar = ({ title, id }) => {
+const NoteBar = ({ title, cateId, content }) => {
   const router = useRouter();
   const [menuClick, setMenuClick] = useState(false);
   const onClickBack = () => {
+    if (content !== "") {
+      axios
+        .post(
+          `${process.env.NEXT_PUBLIC_API_URL}/temp-note/cate-id/${cateId}`,
+          {
+            content,
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          alert("임시저장되었습니다");
+        })
+        .catch((err) => console.log(err));
+    }
     router.back();
   };
   const onClickMenu = () => {
@@ -23,14 +38,17 @@ const NoteBar = ({ title, id }) => {
         <span className="font-bold">{title}</span>
         <span
           onClick={onClickMenu}
-          className={cls("mr-5 cursor-pointer", id === null ? "opacity-0" : "")}
+          className={cls(
+            "mr-5 cursor-pointer",
+            cateId === null ? "opacity-0" : ""
+          )}
         >
           <BiMenu />
         </span>
 
         {menuClick ? (
           <Link
-            href={`${id}/files`}
+            href={`${cateId}/files`}
             className=" bg-white absolute top-14 right-0 sm:-right-10 shadow-lg cursor-pointer"
           >
             <span className="px-14 py-1  text-lg">서랍장</span>
