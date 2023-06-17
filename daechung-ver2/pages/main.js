@@ -9,6 +9,8 @@ import pin from "../public/핀.png";
 import Layout from "@/components/Layout";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { selectDayState } from "@/components/atom";
 
 const Profile = tw.div`
   flex
@@ -28,6 +30,8 @@ const CateItem = tw.div`
 `;
 export default function Main() {
   const [name, setName] = useState();
+  const [selectedDay, setSelectedDay] = useRecoilState(selectDayState);
+  const [dayCates, setDayCates] = useState([]);
   useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`)
@@ -35,10 +39,23 @@ export default function Main() {
         setName(res.data.user.name);
       })
       .catch((err) => console.log(err));
-  }, []);
+
+    axios
+      .get(
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/notes/date?year=${selectedDay.format(
+          "YYYY"
+        )}&month=${selectedDay.format("M")}&day=${selectedDay.format("DD")}`
+      )
+      .then((res) => {
+        setDayCates(res.data.cates);
+      })
+      .catch((err) => console.log(err));
+  }, [selectedDay]);
   return (
     <Layout>
-      <div className="p-5 sm:py-10 ">
+      <div className="h-screen p-5 sm:py-10 mb-32 sm:mb-12 ">
         <Profile>
           <Image
             src={profile}
@@ -59,9 +76,9 @@ export default function Main() {
           </div>
         </div>
         <div className="space-y-2 mb-12">
-          <CateItem>국민은행 서포터즈</CateItem>
-          <CateItem>브랜드 전략</CateItem>
-          <CateItem>디지털전환과 비즈니스 모델링</CateItem>
+          {dayCates.map((dC) => (
+            <CateItem>{dC.name}</CateItem>
+          ))}
         </div>
       </div>
     </Layout>

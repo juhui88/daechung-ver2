@@ -1,7 +1,13 @@
+import axios from "axios";
 import { cls } from "../libs/utils";
 import moment from "moment";
 import "moment/locale/ko";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import grassImg from "../public/잔디.png";
+import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { selectDayState } from "./atom";
 
 const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -11,14 +17,19 @@ export default function CalendarBar() {
   const [selectedYear, setSelectedYear] = useState(
     Number(date.clone().format("YYYY"))
   );
-  const [today, setToday] = useState(date.clone().format("YYYY-MM-DD"));
 
-  const handleMonth = (num) =>
+  const [today, setToday] = useState(date.clone().format("YYYY-MM-DD"));
+  const [grass, setGrass] = useState([]);
+  const [selectedDay, setSelectedDay] = useRecoilState(selectDayState);
+  const handleMonth = (num) => {
     num
       ? setDate(date.clone().add(1, "month"))
       : setDate(date.clone().subtract(1, "month"));
+  };
   const returnToday = () => setDate(moment());
-
+  const onClickDay = (current) => {
+    setSelectedDay(current.clone());
+  };
   const buildCalendar = () => {
     const dateStartWeek = date.clone().startOf("month").week();
     // date가 속하는 달의 첫번쨰 주가 이번년도의 몇번째 주인가
@@ -52,18 +63,27 @@ export default function CalendarBar() {
                 const isToday = current.clone().format(`YYYY-MM-DD`) === today;
 
                 return (
-                  <span
-                    key={i}
-                    className={cls(
-                      "text-center hover:font-extrabold text-lg px-1",
-                      isMonth ? "text-gray-200" : "",
-                      !isMonth && isToday
-                        ? " bg-[#bed0d9] rounded-full px-2 py-1"
-                        : ""
-                    )}
-                  >
-                    {current.format("D")}
-                  </span>
+                  <div key={i} className="relative">
+                    <span
+                      className={cls(
+                        "text-center hover:font-extrabold text-lg px-1",
+                        isMonth ? "text-gray-200" : "",
+                        !isMonth && isToday
+                          ? " bg-[#bed0d9] rounded-full px-2 py-1"
+                          : "",
+                        selectedDay.format("YYYY-MM-DD") ===
+                          current.format("YYYY-MM-DD")
+                          ? "font-extrabold"
+                          : ""
+                      )}
+                      onClick={() => onClickDay(current)}
+                    >
+                      {current.format("D")}
+                    </span>
+                    {grass[current.clone().format("DD")] ? (
+                      <Image className="absolute -bottom-2" src={grassImg} />
+                    ) : null}
+                  </div>
                 );
               }),
           ]}
@@ -107,8 +127,17 @@ export default function CalendarBar() {
       : setSelectedYear(selectedYear - 12);
 
   useEffect(() => {
-    /* axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`); */
-  });
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/notes/grass?year=${date
+          .clone()
+          .format("YYYY")}&month=${date.clone().format("MM")}`
+      )
+      .then((res) => {
+        setGrass(res.data.grass);
+      })
+      .catch((err) => console.log(err));
+  }, [date]);
   return (
     <div className="select-none bg-bgColor w-full">
       {yearClicked ? (

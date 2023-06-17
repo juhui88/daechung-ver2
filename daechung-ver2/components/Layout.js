@@ -12,7 +12,7 @@ const Layout = ({ children }) => {
     <div className="h-full">
       <div
         className={cls(
-          " sm:w-[640px] flex-grow mx-auto  border-l border-r  ",
+          " sm:w-[640px] flex-1 mx-auto  border-l border-r  ",
           router.pathname === "/" ? "" : "mb-[52px]"
         )}
       >

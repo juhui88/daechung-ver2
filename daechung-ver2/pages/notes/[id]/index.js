@@ -36,7 +36,7 @@ const NoteSpan = tw.span`
 
 const NoteDetail = () => {
   const { register, handleSubmit, reset, watch } = useForm();
-  const [files, setFiles] = useState();
+  const files = watch("files");
   const router = useRouter();
   const btnRef = useRef();
   const editBtnRef = useRef();
@@ -48,14 +48,17 @@ const NoteDetail = () => {
   const cateId = router.query.id;
 
   const onValid = (data) => {
-    console.log(data);
+    console.log(data.files);
     if (data.content === "" && data.files.length === 0) return;
     const formData = new FormData();
     formData.append("content", data.content);
 
-    if (Array.from(data.files).length !== 0) {
-      Array.from(data.files).map((f) => formData.append("file", f));
+    for (let i = 0; i < data.files.length; i++) {
+      const file = data.files[i];
+      formData.append(`file${i}`, file);
+      console.log(file);
     }
+
     axios({
       method: "post",
       url: `${process.env.NEXT_PUBLIC_API_URL}/notes/cate-id/${cateId}`,
@@ -70,9 +73,6 @@ const NoteDetail = () => {
       })
       .catch((err) => console.log(err));
     reset();
-  };
-  const insertFiles = (e) => {
-    console.log(e);
   };
   const handleKeyDown = (e) => {
     if (!e.shiftKey && e.key === "Enter") {
@@ -103,9 +103,6 @@ const NoteDetail = () => {
       textarea.selectionStart = textarea.selectionEnd = start + 1;
     }
   };
-  const onChangeFile = (e) => {
-    watch(files);
-  };
 
   const onClickEdit = (noteId) => {
     setEditState(true);
@@ -123,6 +120,7 @@ const NoteDetail = () => {
         content: data.noteContent,
       })
       .then((res) => {
+        console.log(res);
         setEditState(false);
         setChange((prev) => !prev);
       })
@@ -134,6 +132,7 @@ const NoteDetail = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/notes/main/cate-id/${cateId}`)
       .then((res) => {
+        console.log(res);
         setNotes(res.data.notes.reverse());
         setCateName(res.data.cate.name);
       })
@@ -176,10 +175,17 @@ const NoteDetail = () => {
                       삭제
                     </EditBtn>
                   </div>
-                  {note.__files__?.length === 0 ? null : (
-                    <div className="border-t mt-3 h-20"></div>
-                  )}
                 </div>
+                {note.__files__?.length === 0 ? null : (
+                  <div className="border-t mt-4 space-y-2">
+                    {note.__files__?.map((f) => (
+                      <div>
+                        <span>{}</span>
+                        {f.originalName}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </NoteWrap>
             ))}
           </div>
@@ -199,7 +205,6 @@ const NoteDetail = () => {
               첨부파일
             </label>
             <input
-              onChange={(e) => onChangeFile(e)}
               id="files"
               {...register("files")}
               type="file"
@@ -213,7 +218,6 @@ const NoteDetail = () => {
               입력
             </button>
           </form>
-          <div></div>
         </div>
       </div>
     </Layout>
