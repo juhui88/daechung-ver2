@@ -46,7 +46,7 @@ export default function Main() {
           process.env.NEXT_PUBLIC_API_URL
         }/notes/date?year=${selectedDay.format(
           "YYYY"
-        )}&month=${selectedDay.format("M")}&day=${selectedDay.format("DD")}`
+        )}&month=${selectedDay.format("MM")}&day=${selectedDay.format("DD")}`
       )
       .then((res) => {
         setDayCates(res.data.cates);
