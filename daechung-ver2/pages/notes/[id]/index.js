@@ -15,6 +15,7 @@ const NoteWrap = tw.div`
     py-4
     rounded-l-2xl
     rounded-tr-2xl
+  
 `;
 
 const EditBtn = tw.button`
@@ -30,36 +31,34 @@ const EditBtn = tw.button`
 const NoteSpan = tw.span`
     text-sm
     sm:text-lg
+
 `;
-const 임시 = [
-  {
-    content:
-      "오늘은 아이와 be 동사의 의문문과 부정문 진도를 나갔습니다. 아이가 의문문 만드는 것을 조금 어려워하여 보충 자료로 다시 연습해보았습니다.",
-    날짜: "2023-05-22",
-    files: [],
-  },
-];
+
 const NoteDetail = () => {
   const { register, handleSubmit, reset, watch } = useForm();
   const [files, setFiles] = useState();
   const router = useRouter();
   const btnRef = useRef();
+  const editBtnRef = useRef();
   const [change, setChange] = useRecoilState(changeState);
   const [notes, setNotes] = useState();
   const [cateName, setCateName] = useState();
-  const id = router.query.id;
+  const [editState, setEditState] = useState(false);
+  const [editNoteId, setEditNoteId] = useState();
+  const cateId = router.query.id;
 
   const onValid = (data) => {
+    console.log(data);
     if (data.content === "" && data.files.length === 0) return;
     const formData = new FormData();
     formData.append("content", data.content);
-    console.log(formData);
+
     if (Array.from(data.files).length !== 0) {
       Array.from(data.files).map((f) => formData.append("file", f));
     }
     axios({
       method: "post",
-      url: `${process.env.NEXT_PUBLIC_API_URL}/notes/cate-id/${id}`,
+      url: `${process.env.NEXT_PUBLIC_API_URL}/notes/cate-id/${cateId}`,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -90,36 +89,92 @@ const NoteDetail = () => {
     }
   };
 
+  const handleEditKeyDown = (e) => {
+    if (!e.shiftKey && e.key === "Enter") {
+      e.preventDefault();
+      editBtnRef.current.click();
+    } else if (e.shiftKey && e.key === "Enter") {
+      e.preventDefault();
+      const textarea = e.target;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const value = textarea.value;
+      textarea.value = value.substring(0, start) + "\n" + value.substring(end);
+      textarea.selectionStart = textarea.selectionEnd = start + 1;
+    }
+  };
   const onChangeFile = (e) => {
     watch(files);
   };
 
+  const onClickEdit = (noteId) => {
+    setEditState(true);
+    setEditNoteId(noteId);
+  };
+  const onClickDelete = (noteId) => {
+    axios
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/notes/note-id/${noteId}`)
+      .then((res) => setChange((prev) => !prev))
+      .catch((err) => console.log(err));
+  };
+  const onValidEdit = (data) => {
+    axios
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/notes/note-id/${editNoteId}`, {
+        content: data.noteContent,
+      })
+      .then((res) => {
+        setEditState(false);
+        setChange((prev) => !prev);
+      })
+      .catch((err) => console.log(err));
+    reset();
+  };
+
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/notes/main/cate-id/${id}`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/notes/main/cate-id/${cateId}`)
       .then((res) => {
-        console.log(res);
-        setNotes(res.data.notes);
+        setNotes(res.data.notes.reverse());
         setCateName(res.data.cate.name);
       })
       .catch((err) => console.log(err));
   }, [change, setChange]);
   return (
     <Layout>
-      <div className="flex flex-col h-screen">
-        <div className="bg-mainColor px-3 flex-grow">
+      <div className=" flex flex-col h-screen w-full">
+        <div className="bg-mainColor flex-grow w-full">
           <NoteBar title={cateName} id={router.query.id} />
-          <div className="space-y-7 mb-20">
+
+          <div className="space-y-7 mt-20 mb-60 px-3 ">
             {notes?.map((note, i) => (
               <NoteWrap key={i} className="text-[#545454] text-lg ">
-                <NoteSpan>{note.content}</NoteSpan>
+                {editState && editNoteId === note.id ? (
+                  <form onSubmit={handleSubmit(onValidEdit)}>
+                    <textarea
+                      onKeyDown={handleEditKeyDown}
+                      className="w-full"
+                      autoFocus
+                      {...register("noteContent", { value: note.content })}
+                    />
+                    <button ref={editBtnRef} type="submit" className="hidden">
+                      수정
+                    </button>
+                  </form>
+                ) : (
+                  <NoteSpan className="whitespace-pre-line">
+                    {note.content}
+                  </NoteSpan>
+                )}
+
                 <div className="flex justify-between items-center">
                   <NoteSpan className="text-pointColor">
                     {note.createdAt.slice(0, 10)}
                   </NoteSpan>
                   <div className="space-x-3">
-                    <EditBtn>수정</EditBtn>
-                    <EditBtn>삭제</EditBtn>
+                    <EditBtn onClick={() => onClickEdit(note.id)}>수정</EditBtn>
+                    <EditBtn onClick={() => onClickDelete(note.id)}>
+                      삭제
+                    </EditBtn>
                   </div>
                   {note.__files__?.length === 0 ? null : (
                     <div className="border-t mt-3 h-20"></div>
@@ -129,13 +184,13 @@ const NoteDetail = () => {
             ))}
           </div>
         </div>
-        <div>
+        <div className="fixed bottom-10 w-[640px]">
           <form onSubmit={handleSubmit(onValid)} className="relative">
             <textarea
               onKeyDown={handleKeyDown}
               placeholder="내용을 입력하세요"
               {...register("content")}
-              className="textarea h-44 w-full focus:outline-none p-2 placeholder:text-sm break-all normal-nums"
+              className="textarea h-32 sm:h-44 w-full focus:outline-none p-2 placeholder:text-sm break-all normal-nums"
             />
             <label
               htmlFor="files"
