@@ -10,6 +10,9 @@ import styled from "styled-components";
 import Point from "@/components/mainCompo/Point";
 import ForWhom from "@/components/mainCompo/ForWhom";
 import Link from "next/link";
+import { useEffect } from "react";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 const PointText = tw.div`
   text-3xl
@@ -41,6 +44,16 @@ const Bubble = styled.div`
 `;
 
 export default function Home() {
+  const router = useRouter();
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`)
+      .then((res) => {
+        console.log(res);
+        router.push("/main");
+      })
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <div className="w-screen h-screen">
       <Head>

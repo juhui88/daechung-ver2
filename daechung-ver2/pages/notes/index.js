@@ -1,4 +1,3 @@
-import Bar from "@/components/Bar";
 import React, { useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { useForm } from "react-hook-form";
@@ -9,53 +8,25 @@ import { ImPlus } from "react-icons/im";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { changeState } from "@/components/atom";
+import { cls } from "@/libs/utils";
 
-axios.interceptors.request.use(
-  function (config) {
-    const token = localStorage.getItem("token");
-    config.headers.Authorization = `Bearer ${token}`;
-    config.headers["Content-Type"] = "application/json";
-    return config;
-  },
-  function (error) {
-    return Promise.reject(error);
-  }
-);
-
-const 임시 = [
-  {
-    id: 0,
-    title: "대충이 만들기1",
-    content:
-      "오늘은 대충이 버전2를 만들었다 css를 한꺼번에 다시 만들어야 해서 좀 힘들었지만 그래도 공부하느니 이거 하는게 재밌다 허허 아닌가? 공부시러 제발 으ㅡㅡ으우ㅜㅜ",
-  },
-  {
-    id: 1,
-    title: "대충이 만들기2",
-    content:
-      "오늘은 대충이 버전2를 만들었다 css를 한꺼번에 다시 만들어야 해서 좀 힘들었지만 그래도 공부하느니 이거 하는게 재밌다 허허 아닌가? 공부시러 제발 으ㅡㅡ으우ㅜㅜ",
-  },
-  {
-    id: 2,
-    title: "대충이 만들기3",
-    content:
-      "오늘은 대충이 버전2를 만들었다 css를 한꺼번에 다시 만들어야 해서 좀 힘들었지만 그래도 공부하느니 이거 하는게 재밌다 허허 아닌가? 공부시러 제발 으ㅡㅡ으우ㅜㅜ",
-  },
-];
 const EditBtn = tw.button`
     border-[1.5px]
     border-pointColor
     rounded-lg
     px-2
     hover:shadow-lg
+    z-10
 `;
 
 const Notes = () => {
   const { register, handleSubmit, reset, watch } = useForm();
   const [addState, setAddState] = useState(false);
+  const [editState, setEditState] = useState(false);
+  const [editCateId, setEditCateId] = useState();
   const [change, setChange] = useRecoilState(changeState);
 
-  const [noteData, setNoteData] = useState();
+  const [noteData, setNoteData] = useState([]);
 
   const onClickAdd = () => {
     setAddState((prev) => !prev);
@@ -79,7 +50,32 @@ const Notes = () => {
     setAddState(false);
   };
 
-  const onClickEdit = () => {};
+  const onClickEdit = (cateId) => {
+    setEditState(true);
+    setEditCateId(cateId);
+  };
+  const onValidEdit = (data) => {
+    axios
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/cates/cate-id/${editCateId}`, {
+        cateName: data.cateName,
+      })
+      .then((res) => {
+        setChange((prev) => !prev);
+        setEditState(false);
+      })
+      .catch((err) => console.log(err));
+    reset();
+  };
+  const onClickDelte = (cateId) => {
+    axios
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/cates/cate-id/${cateId}`)
+      .then((res) => {
+        console.log(res);
+        setChange((prev) => !prev);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/cates`)
@@ -91,8 +87,8 @@ const Notes = () => {
   }, [change, setChange]);
   return (
     <Layout>
-      <div className="mb-12 relative h-screen w-full">
-        <div className="border-b px-6  py-8 sm:py-10">
+      <div className={cls("mb-12 relative w-full h-screen")}>
+        <div className=" border-b px-6  py-8 sm:py-10">
           <form
             onSubmit={handleSubmit(onValidSearch)}
             className=" relative flex items-center w-11/12"
@@ -125,21 +121,35 @@ const Notes = () => {
         ) : null}
 
         {noteData?.map((n, i) => (
-          <Link key={i} href={`/notes/${String(n.cate.id)}`}>
-            <div className="px-6 py-3 sm:py-6 border-b bg-bgColor cursor-pointer">
-              {/* 노트들 묶음 */}
-              <div className="flex justify-between pb-5">
+          <div
+            key={i}
+            className="flex bg-bgColor cursor-pointer px-6 py-3 sm:py-6 border-b"
+          >
+            <Link
+              key={i}
+              href={`/notes/${String(n.cate.id)}`}
+              className="flex-1"
+            >
+              {editState && editCateId === n.cate.id ? (
+                <form onSubmit={handleSubmit(onValidEdit)}>
+                  <input
+                    autoFocus
+                    {...register("cateName", { value: n.cate.name })}
+                  />
+                </form>
+              ) : (
                 <span className="font-bold">{n.cate.name}</span>
-                <div className="text-pointColor space-x-3 font-bold">
-                  <EditBtn>수정</EditBtn>
-                  <EditBtn>삭제</EditBtn>
-                </div>
-              </div>
+              )}
+
               <div className="h-12 overflow-hidden whitespace-normal text-ellipsis break-keep  content">
-                {n?.note}
+                {n.note?.id}
               </div>
+            </Link>
+            <div className="text-pointColor space-x-3 font-bold">
+              <EditBtn onClick={() => onClickEdit(n.cate.id)}>수정</EditBtn>
+              <EditBtn onClick={() => onClickDelte(n.cate.id)}>삭제</EditBtn>
             </div>
-          </Link>
+          </div>
         ))}
         <div
           onClick={onClickAdd}

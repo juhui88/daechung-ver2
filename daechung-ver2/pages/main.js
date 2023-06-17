@@ -10,18 +10,6 @@ import Layout from "@/components/Layout";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-axios.interceptors.request.use(
-  function (config) {
-    const token = localStorage.getItem("token");
-    config.headers.Authorization = `Bearer ${token}`;
-    config.headers["Content-Type"] = "application/json";
-    return config;
-  },
-  function (error) {
-    return Promise.reject(error);
-  }
-);
-
 const Profile = tw.div`
   flex
   items-center

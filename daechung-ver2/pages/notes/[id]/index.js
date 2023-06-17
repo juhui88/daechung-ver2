@@ -1,10 +1,13 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import tw from "tailwind-styled-components";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import NoteBar from "@/components/NoteBar";
 import moment from "moment";
+import { useRecoilState } from "recoil";
+import { changeState } from "@/components/atom";
+import axios from "axios";
 
 const NoteWrap = tw.div`
     bg-bgColor
@@ -41,17 +44,32 @@ const NoteDetail = () => {
   const [files, setFiles] = useState();
   const router = useRouter();
   const btnRef = useRef();
+  const [change, setChange] = useRecoilState(changeState);
+  const [notes, setNotes] = useState();
+  const [cateName, setCateName] = useState();
+  const id = router.query.id;
 
   const onValid = (data) => {
     if (data.content === "" && data.files.length === 0) return;
-    console.log(data);
-    const 임시데이터 = {
-      content: data.content,
-      날짜: moment().format("YYYY-MM-DD"),
-      files: data.files,
-    };
-    console.log(임시데이터);
-    임시.push(임시데이터);
+    const formData = new FormData();
+    formData.append("content", data.content);
+    console.log(formData);
+    if (Array.from(data.files).length !== 0) {
+      Array.from(data.files).map((f) => formData.append("file", f));
+    }
+    axios({
+      method: "post",
+      url: `${process.env.NEXT_PUBLIC_API_URL}/notes/cate-id/${id}`,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
+    })
+      .then((res) => {
+        console.log(res);
+        setChange((prev) => !prev);
+      })
+      .catch((err) => console.log(err));
     reset();
   };
   const insertFiles = (e) => {
@@ -75,22 +93,35 @@ const NoteDetail = () => {
   const onChangeFile = (e) => {
     watch(files);
   };
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/notes/main/cate-id/${id}`)
+      .then((res) => {
+        console.log(res);
+        setNotes(res.data.notes);
+        setCateName(res.data.cate.name);
+      })
+      .catch((err) => console.log(err));
+  }, [change, setChange]);
   return (
     <Layout>
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-screen">
         <div className="bg-mainColor px-3 flex-grow">
-          <NoteBar title={"대충이 만들기"} id={router.query.id} />
+          <NoteBar title={cateName} id={router.query.id} />
           <div className="space-y-7 mb-20">
-            {임시.map((note, i) => (
+            {notes?.map((note, i) => (
               <NoteWrap key={i} className="text-[#545454] text-lg ">
                 <NoteSpan>{note.content}</NoteSpan>
                 <div className="flex justify-between items-center">
-                  <NoteSpan className="text-pointColor">{note.날짜}</NoteSpan>
+                  <NoteSpan className="text-pointColor">
+                    {note.createdAt.slice(0, 10)}
+                  </NoteSpan>
                   <div className="space-x-3">
                     <EditBtn>수정</EditBtn>
                     <EditBtn>삭제</EditBtn>
                   </div>
-                  {note.files.length === 0 ? null : (
+                  {note.__files__?.length === 0 ? null : (
                     <div className="border-t mt-3 h-20"></div>
                   )}
                 </div>

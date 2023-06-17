@@ -7,7 +7,7 @@ import { cls } from "@/libs/utils";
 const Layout = ({ children }) => {
   const router = useRouter();
   const [width, setWidth] = useState(false);
-  console.log(router.pathname);
+
   return (
     <div className="h-full">
       <div
