@@ -142,7 +142,7 @@ const Notes = () => {
               )}
 
               <div className="h-12 overflow-hidden whitespace-normal text-ellipsis break-keep  content">
-                {n.note?.id}
+                {n.note?.content}
               </div>
             </Link>
             <div className="text-pointColor space-x-3 font-bold">

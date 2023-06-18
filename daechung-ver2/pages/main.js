@@ -10,7 +10,7 @@ import Layout from "@/components/Layout";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { selectDayState } from "@/components/atom";
+import { changeState, selectDayState } from "@/components/atom";
 
 const Profile = tw.div`
   flex
@@ -32,6 +32,7 @@ export default function Main() {
   const [name, setName] = useState();
   const [selectedDay, setSelectedDay] = useRecoilState(selectDayState);
   const [dayCates, setDayCates] = useState([]);
+  const [change, setChange] = useRecoilState(changeState);
   useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`)
@@ -49,10 +50,11 @@ export default function Main() {
         )}&month=${selectedDay.format("MM")}&day=${selectedDay.format("DD")}`
       )
       .then((res) => {
+        console.log(res);
         setDayCates(res.data.cates);
       })
       .catch((err) => console.log(err));
-  }, [selectedDay]);
+  }, [selectedDay, change, setChange]);
   return (
     <Layout>
       <div className="h-screen p-5 sm:py-10 mb-32 sm:mb-12 ">
