@@ -69,7 +69,7 @@ export default function CalendarBar() {
                         "text-center hover:font-extrabold text-lg px-1",
                         isMonth ? "text-gray-200" : "",
                         !isMonth && isToday
-                          ? " bg-[#bed0d9] rounded-full px-2 py-1"
+                          ? " bg-[#bed0d9] rounded-full p-1"
                           : "",
                         selectedDay.format("YYYY-MM-DD") ===
                           current.format("YYYY-MM-DD")
@@ -80,7 +80,7 @@ export default function CalendarBar() {
                     >
                       {current.format("D")}
                     </span>
-                    {grass[current.clone().format("DD")] ? (
+                    {grass[current.clone().format("DD") - 1] ? (
                       <Image className="absolute -bottom-2" src={grassImg} />
                     ) : null}
                   </div>

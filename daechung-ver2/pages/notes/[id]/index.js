@@ -56,8 +56,11 @@ const NoteDetail = () => {
 
     for (let i = 0; i < data.files.length; i++) {
       const file = data.files[i];
-      formData.append(`file${i}`, file);
       console.log(file);
+      if (file instanceof File) {
+        formData.append(`file${i}`, file);
+      }
+      console.log("폼데이터", formData);
     }
 
     axios({
