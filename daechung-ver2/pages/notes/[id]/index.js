@@ -8,6 +8,7 @@ import moment from "moment";
 import { useRecoilState } from "recoil";
 import { changeState } from "@/components/atom";
 import axios from "axios";
+import { cls } from "@/libs/utils";
 
 const NoteWrap = tw.div`
     bg-bgColor
@@ -46,21 +47,25 @@ const NoteDetail = () => {
   const [editState, setEditState] = useState(false);
   const [editNoteId, setEditNoteId] = useState();
   const [tempNote, setTempNote] = useState();
+
   const cateId = router.query.id;
 
   const onValid = (data) => {
-    console.log(data.files);
-    if (data.content === "" && data.files.length === 0) return;
+    console.log(data);
+    if (data.content === "" && files.length === 0) return;
     const formData = new FormData();
     formData.append("content", data.content);
 
-    for (let i = 0; i < data.files.length; i++) {
-      const file = data.files[i];
-      console.log(file);
-      if (file instanceof File) {
-        formData.append(`file${i}`, file);
-      }
-      console.log("폼데이터", formData);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      formData.append(`file${i}`, file);
+    }
+    for (var key of formData.keys()) {
+      console.log("폼키", key);
+    }
+
+    for (var value of formData.values()) {
+      console.log("폼밸류", value);
     }
 
     axios({
@@ -70,6 +75,9 @@ const NoteDetail = () => {
         "Content-Type": "multipart/form-data",
       },
       data: formData,
+      transformRequest: (data, headers) => {
+        return data;
+      },
     })
       .then((res) => {
         console.log(res);
@@ -150,6 +158,7 @@ const NoteDetail = () => {
       })
       .catch((err) => console.log(err));
   }, [change, setChange]);
+
   return (
     <Layout>
       <div className=" flex flex-col h-screen w-full">
@@ -160,7 +169,12 @@ const NoteDetail = () => {
             content={watch("content")}
           />
 
-          <div className="space-y-7 mt-20 mb-60 px-3 ">
+          <div
+            className={cls(
+              "space-y-7 mt-20 mb-60 px-3 mb-",
+              files && Array.from(files).length ? `mb-96` : ""
+            )}
+          >
             {notes?.map((note, i) => (
               <NoteWrap key={i} className="text-[#545454] text-lg ">
                 {editState && editNoteId === note.id ? (
@@ -226,6 +240,8 @@ const NoteDetail = () => {
               id="files"
               {...register("files")}
               type="file"
+              name="files"
+              accept=".ppt,.pptx,application/vnd.ms-powerpoint,.hwp,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
               className="hidden"
               multiple
             />
@@ -236,6 +252,13 @@ const NoteDetail = () => {
               입력
             </button>
           </form>
+          <div className="-mt-2 mb-4 border-t bg-white">
+            {files && Array.from(files).length !== 0
+              ? Array.from(files).map((f) => (
+                  <div className="border-b">{f.name}</div>
+                ))
+              : null}
+          </div>
         </div>
       </div>
     </Layout>
