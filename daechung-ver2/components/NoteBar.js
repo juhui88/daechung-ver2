@@ -5,6 +5,7 @@ import { BiMenu } from "react-icons/bi";
 import { useRouter } from "next/router";
 import { cls } from "@/libs/utils";
 import axios from "axios";
+import { headers } from "next/dist/client/components/headers";
 
 const NoteBar = ({ title, cateId, content }) => {
   const router = useRouter();
@@ -16,6 +17,12 @@ const NoteBar = ({ title, cateId, content }) => {
           `${process.env.NEXT_PUBLIC_API_URL}/temp-note/cate-id/${cateId}`,
           {
             content,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            transformRequest: (data, headers) => {
+              return data;
+            },
           }
         )
         .then((res) => {

@@ -1,7 +1,4 @@
-import Head from "next/head";
 import Image from "next/image";
-import { Inter } from "@next/font/google";
-import Bar from "@/components/Bar";
 import tw from "tailwind-styled-components";
 import Calendar from "@/components/Calendar";
 import profile from "../public/대충이 프로필 사진.png";
@@ -11,6 +8,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { changeState, selectDayState } from "@/components/atom";
+import Link from "next/link";
 
 const Profile = tw.div`
   flex
@@ -79,7 +77,9 @@ export default function Main() {
         </div>
         <div className="space-y-2 mb-12">
           {dayCates.map((dC) => (
-            <CateItem>{dC.name}</CateItem>
+            <Link href={`/notes/${String(dC.id)}`}>
+              <CateItem>{dC.name}</CateItem>
+            </Link>
           ))}
         </div>
       </div>

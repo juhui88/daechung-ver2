@@ -24,7 +24,7 @@ const ForWhom = () => {
     <div className="pb-10">
       <div className="flex items-center space-x-2">
         <Image src={check} alt="" className="w-10" />
-        <PointText>For WHOM?</PointText>
+        <PointText>For Whom?</PointText>
       </div>
       <div className="relative  h-[400px] flex w-full justify-center items-center">
         <ImgWrap>

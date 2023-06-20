@@ -44,15 +44,23 @@ const NoteDetail = () => {
   const [change, setChange] = useRecoilState(changeState);
   const [notes, setNotes] = useState();
   const [cateName, setCateName] = useState();
+
   const [editState, setEditState] = useState(false);
   const [editNoteId, setEditNoteId] = useState();
+  const [editNoteContent, setEditNoteContent] = useState("");
   const [tempNote, setTempNote] = useState();
+
+  const messageEndRef = useRef(null);
 
   const cateId = router.query.id;
 
   const onValid = (data) => {
-    console.log(data);
-    if (data.content === "" && files.length === 0) return;
+    if (
+      (tempNote?.content !== "" || watch("content") === "") &&
+      data.content === "" &&
+      files.length === 0
+    )
+      return;
     const formData = new FormData();
     formData.append("content", data.content);
 
@@ -84,8 +92,17 @@ const NoteDetail = () => {
         setChange((prev) => !prev);
       })
       .catch((err) => console.log(err));
+    console.log(tempNote);
+
+    let tempNoteCopy = { ...tempNote };
+
+    tempNoteCopy.content = "";
+    tempNoteCopy.__tempFiles__ = [];
+
+    setTempNote(tempNoteCopy);
     reset();
   };
+
   const handleKeyDown = (e) => {
     if (!e.shiftKey && e.key === "Enter") {
       e.preventDefault();
@@ -116,16 +133,19 @@ const NoteDetail = () => {
     }
   };
 
-  const onClickEdit = (noteId) => {
-    setEditState(true);
+  const onClickEdit = (noteId, noteContent) => {
+    setEditState((prev) => !prev);
     setEditNoteId(noteId);
+    setEditNoteContent(noteContent);
   };
+
   const onClickDelete = (noteId) => {
     axios
       .delete(`${process.env.NEXT_PUBLIC_API_URL}/notes/note-id/${noteId}`)
       .then((res) => setChange((prev) => !prev))
       .catch((err) => console.log(err));
   };
+
   const onValidEdit = (data) => {
     axios
       .put(`${process.env.NEXT_PUBLIC_API_URL}/notes/note-id/${editNoteId}`, {
@@ -157,7 +177,11 @@ const NoteDetail = () => {
         setTempNote(res.data.tempNote);
       })
       .catch((err) => console.log(err));
-  }, [change, setChange]);
+  }, [change, setChange, editNoteContent]);
+
+  useEffect(() => {
+    messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [notes]);
 
   return (
     <Layout>
@@ -166,7 +190,9 @@ const NoteDetail = () => {
           <NoteBar
             title={cateName}
             cateId={cateId}
-            content={watch("content")}
+            content={
+              watch("content") === "" ? tempNote?.content : watch("content")
+            }
           />
 
           <div
@@ -177,13 +203,13 @@ const NoteDetail = () => {
           >
             {notes?.map((note, i) => (
               <NoteWrap key={i} className="text-[#545454] text-lg ">
-                {editState && editNoteId === note.id ? (
+                {editState && note.id === editNoteId ? (
                   <form onSubmit={handleSubmit(onValidEdit)}>
                     <textarea
                       onKeyDown={handleEditKeyDown}
                       className="w-full"
                       autoFocus
-                      {...register("noteContent", { value: note.content })}
+                      {...register("noteContent", { value: editNoteContent })}
                     />
                     <button ref={editBtnRef} type="submit" className="hidden">
                       수정
@@ -200,7 +226,9 @@ const NoteDetail = () => {
                     {note.createdAt.slice(0, 10)}
                   </NoteSpan>
                   <div className="space-x-3">
-                    <EditBtn onClick={() => onClickEdit(note.id)}>수정</EditBtn>
+                    <EditBtn onClick={() => onClickEdit(note.id, note.content)}>
+                      수정
+                    </EditBtn>
                     <EditBtn onClick={() => onClickDelete(note.id)}>
                       삭제
                     </EditBtn>
@@ -218,6 +246,7 @@ const NoteDetail = () => {
                 )}
               </NoteWrap>
             ))}
+            <div ref={messageEndRef}></div>
           </div>
         </div>
 
@@ -226,13 +255,12 @@ const NoteDetail = () => {
             <textarea
               onKeyDown={handleKeyDown}
               placeholder="내용을 입력하세요"
-              {...register("content")}
-              defaultValue={tempNote?.content}
+              {...register("content", { value: tempNote?.content })}
               className="textarea h-32 sm:h-44 w-screen sm:w-full focus:outline-none p-2 placeholder:text-sm break-all normal-nums"
             />
             <label
               htmlFor="files"
-              className="bg-gray-500  text-white font-bold px-5 py-1 rounded-t-xl absolute left-1 -top-8"
+              className="bg-gray-500  text-white font-bold px-5 py-1 rounded-t-xl absolute left-1 -top-8 hover:cursor-pointer"
             >
               첨부파일
             </label>
@@ -255,6 +283,12 @@ const NoteDetail = () => {
           <div className="-mt-2 mb-4 border-t bg-white">
             {files && Array.from(files).length !== 0
               ? Array.from(files).map((f) => (
+                  <div className="border-b">{f.name}</div>
+                ))
+              : null}
+            {tempNote?.__tempFiles__ &&
+            Array.from(tempNote?.__tempFiles__).length !== 0
+              ? Array.from(tempNote?.__tempFiles__).map((f) => (
                   <div className="border-b">{f.name}</div>
                 ))
               : null}

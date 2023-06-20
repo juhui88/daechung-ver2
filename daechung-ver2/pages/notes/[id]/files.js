@@ -19,7 +19,7 @@ const Files = () => {
     <Layout>
       <div className=" bg-mainColor h-screen">
         <NoteBar title={"대충이 만들기 > 서랍장"} id={null} />
-        <div className="px-3 pt-16">dfsdf</div>
+        <div className="px-3 pt-16">서비스 준비중 ...</div>
       </div>
     </Layout>
   );
