@@ -66,7 +66,7 @@ export default function Home() {
       </Head>
       <Layout>
         <div>
-          <div className="mx-10">
+          <div className="mx-10 mt-10 sm:mt-0">
             <div className="flex items-end ">
               <div className=" sm:text-4xl font-semibold flex-grow sm:space-y-7">
                 <div className="flex items-center">
@@ -108,9 +108,9 @@ export default function Home() {
           </div>
         </div>
       </Layout>
-      <div className="hidden lg:block lg:fixed top-10 right-10 xl:right-20 w-72 space-y-10">
-        <div className="bg-bgColor p-5 rounded-xl space-y-3 shadow-xl">
-          <div className="flex justify-between items-center">
+      <div className=" fixed top-0 sm:top-10 right-10 xl:right-20 w-72 space-y-10">
+        <div className="hidden lg:block bg-bgColor p-5 rounded-xl space-y-3 shadow-xl">
+          <div className=" flex justify-between items-center">
             <span className="text-lg text-pointColor ">
               카카오톡으로 <br />
               베타버전 시작하기!
@@ -124,7 +124,7 @@ export default function Home() {
         </div>
         <Link
           href="/login"
-          className="flex items-center shadow-lg p-5 rounded-xl justify-center bg-white text-xl hover:font-bold"
+          className="flex  items-center shadow-lg p-1 sm:p-5 rounded-xl justify-center bg-white sm:text-xl hover:font-bold"
         >
           바로 시작하기
           <svg

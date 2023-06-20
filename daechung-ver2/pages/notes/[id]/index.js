@@ -221,14 +221,14 @@ const NoteDetail = () => {
           </div>
         </div>
 
-        <div className="fixed bottom-10 w-[640px]">
+        <div className="fixed bottom-0 sm:bottom-10 sm:w-[640px]">
           <form onSubmit={handleSubmit(onValid)} className="relative">
             <textarea
               onKeyDown={handleKeyDown}
               placeholder="내용을 입력하세요"
               {...register("content")}
               defaultValue={tempNote?.content}
-              className="textarea h-32 sm:h-44 w-full focus:outline-none p-2 placeholder:text-sm break-all normal-nums"
+              className="textarea h-32 sm:h-44 w-screen sm:w-full focus:outline-none p-2 placeholder:text-sm break-all normal-nums"
             />
             <label
               htmlFor="files"

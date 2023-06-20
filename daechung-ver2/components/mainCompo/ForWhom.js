@@ -31,12 +31,12 @@ const ForWhom = () => {
           <Image
             src={WHOM0}
             alt=""
-            className="w-40 peer hover:opacity-20 transition-all"
+            className="w-32 sm:w-40 peer hover:opacity-20 transition-all"
           />
           <Span>동아리</Span>
         </ImgWrap>
 
-        <ImgWrap className="w-36 absolute top-0 right-[152px]">
+        <ImgWrap className="w-28 sm:w-36 absolute top-12 right-14 sm:top-0 sm:right-[152px]">
           <Image
             src={WHOM1}
             alt=""
@@ -45,7 +45,7 @@ const ForWhom = () => {
           <Span>여행일지</Span>
         </ImgWrap>
 
-        <ImgWrap className="w-36 absolute  right-20">
+        <ImgWrap className="w-28 sm:w-36 absolute  right-0 sm:right-20">
           <Image
             src={WHOM2}
             alt=""
@@ -54,7 +54,7 @@ const ForWhom = () => {
           <Span>프로젝트</Span>
         </ImgWrap>
 
-        <ImgWrap className="w-36 absolute bottom-0 right-[152px]">
+        <ImgWrap className="w-28 sm:w-36 absolute bottom-12 right-14 sm:bottom-0 sm:right-[152px]">
           <Image
             src={WHOM3}
             alt=""
@@ -63,7 +63,7 @@ const ForWhom = () => {
           <Span>운동일지</Span>
         </ImgWrap>
 
-        <ImgWrap className="w-36 absolute bottom-0 left-[152px]">
+        <ImgWrap className="w-28 sm:w-36 absolute bottom-12 left-14 sm:bottom-0 sm:left-[152px]">
           <Image
             src={WHOM4}
             alt=""
@@ -72,7 +72,7 @@ const ForWhom = () => {
           <Span>과제</Span>
         </ImgWrap>
 
-        <ImgWrap className="w-36 absolute left-20">
+        <ImgWrap className="w-28 sm:w-36 absolute left-0 sm:left-20">
           <Image
             src={WHOM5}
             alt=""
@@ -81,7 +81,7 @@ const ForWhom = () => {
           <Span>일기</Span>
         </ImgWrap>
 
-        <ImgWrap className="w-36 absolute top-0 left-[152px]">
+        <ImgWrap className="w-28 sm:w-36 absolute top-12 left-14 sm:top-0 sm:left-[152px]">
           <Image
             src={WHOM6}
             alt=""
