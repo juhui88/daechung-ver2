@@ -32,7 +32,7 @@ const ForWhom = () => {
           <Image src={WHOM0} alt="" className="w-32 sm:w-40  " />
           <Image
             src={hexagon}
-            className="hidden  group-hover:block opacity-80 w-32 sm:w-40 absolute rotate-90 transition-all"
+            className=" opacity-0 group-hover:block group-hover:opacity-80 w-32 sm:w-40 absolute rotate-90 duration-500"
           />
           <Span>동아리</Span>
         </ImgWrap>
@@ -41,7 +41,7 @@ const ForWhom = () => {
           <Image src={WHOM1} alt="" className="peer  hover:opacity-20 " />
           <Image
             src={hexagon}
-            className="hidden  group-hover:block opacity-80 w-32 sm:w-40 absolute rotate-90 transition-all"
+            className="opacity-0 group-hover:block group-hover:opacity-80 w-32 sm:w-40 absolute rotate-90 duration-500"
           />
           <Span>여행일지</Span>
         </ImgWrap>
@@ -50,7 +50,7 @@ const ForWhom = () => {
           <Image src={WHOM2} alt="" className=" peer  hover:opacity-20  " />
           <Image
             src={hexagon}
-            className="hidden  group-hover:block opacity-80 w-32 sm:w-40 absolute rotate-90 transition-all"
+            className="opacity-0 group-hover:block group-hover:opacity-80 w-32 sm:w-40 absolute rotate-90 duration-500"
           />
           <Span>프로젝트</Span>
         </ImgWrap>
@@ -59,7 +59,7 @@ const ForWhom = () => {
           <Image src={WHOM3} alt="" className="peer  hover:opacity-20  " />
           <Image
             src={hexagon}
-            className="hidden  group-hover:block opacity-80 w-32 sm:w-40 absolute rotate-90 transition-all"
+            className="opacity-0 group-hover:block group-hover:opacity-80 w-32 sm:w-40 absolute rotate-90 duration-500"
           />
           <Span>운동일지</Span>
         </ImgWrap>
@@ -68,7 +68,7 @@ const ForWhom = () => {
           <Image src={WHOM4} alt="" className="peer  hover:opacity-20  " />
           <Image
             src={hexagon}
-            className="hidden  group-hover:block opacity-80 w-32 sm:w-40 absolute rotate-90 transition-all"
+            className="opacity-0 group-hover:block group-hover:opacity-80 w-32 sm:w-40 absolute rotate-90 duration-500"
           />
           <Span>과제</Span>
         </ImgWrap>
@@ -77,7 +77,7 @@ const ForWhom = () => {
           <Image src={WHOM5} alt="" className="peer  hover:opacity-20  " />
           <Image
             src={hexagon}
-            className="hidden  group-hover:block opacity-80 w-32 sm:w-40 absolute rotate-90 transition-all"
+            className="opacity-0 group-hover:block group-hover:opacity-80 w-32 sm:w-40 absolute rotate-90 duration-500"
           />
           <Span>일기</Span>
         </ImgWrap>
@@ -86,7 +86,7 @@ const ForWhom = () => {
           <Image src={WHOM6} alt="" className="peer  hover:opacity-20  " />
           <Image
             src={hexagon}
-            className="hidden  group-hover:block opacity-80 w-32 sm:w-40 absolute rotate-90 transition-all"
+            className="opacity-0 group-hover:block group-hover:opacity-80 w-32 sm:w-40 absolute rotate-90 duration-500"
           />
           <Span>강의</Span>
         </ImgWrap>

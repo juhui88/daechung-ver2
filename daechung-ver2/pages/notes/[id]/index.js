@@ -135,27 +135,14 @@ const NoteDetail = () => {
     }
   };
 
-  const onValidEdit = (data) => {
-    axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/notes/note-id/${editNoteId}`, {
-        content: data.noteContent,
-      })
-      .then((res) => {
-        console.log(res);
-        setEditState(false);
-        setChange((prev) => !prev);
-      })
-      .catch((err) => console.log(err));
-    reset();
-  };
-
   const downloadFile = (file) => {
+    console.log(file);
     const fileUrl = file.fileUrl;
 
     axios
       .get(fileUrl, { responseType: "blob" })
       .then((res) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", file.originalName); // 다운로드될 파일의 이름을 설정합니다
