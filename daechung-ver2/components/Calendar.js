@@ -66,7 +66,7 @@ export default function CalendarBar() {
                   <div key={i} className="relative">
                     <span
                       className={cls(
-                        "text-center hover:font-extrabold text-lg px-1",
+                        "text-center hover:font-extrabold text-lg px-1 cursor-pointer",
                         isMonth ? "text-gray-200" : "",
                         !isMonth && isToday
                           ? " bg-[#bed0d9] rounded-full p-1"

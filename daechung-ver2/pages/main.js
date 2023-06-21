@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { changeState, selectDayState } from "@/components/atom";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Profile = tw.div`
   flex
@@ -16,8 +17,6 @@ const Profile = tw.div`
   my-4
   space-x-2
   cursor-pointer
-  ml-9
-  sm:ml-16
 `;
 const CateItem = tw.div`
   bg-[#F0F0F0]
@@ -25,12 +24,18 @@ const CateItem = tw.div`
   px-6
   rounded-bl-2xl
   rounded-se-2xl 
+  mb-4
 `;
 export default function Main() {
   const [name, setName] = useState();
   const [selectedDay, setSelectedDay] = useRecoilState(selectDayState);
   const [dayCates, setDayCates] = useState([]);
   const [change, setChange] = useRecoilState(changeState);
+  const router = useRouter();
+  const onClickLogout = () => {
+    window.localStorage.removeItem("token");
+    router.push("/");
+  };
   useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`)
@@ -55,15 +60,24 @@ export default function Main() {
   }, [selectedDay, change, setChange]);
   return (
     <Layout>
-      <div className="h-screen p-5 sm:py-10 mb-32 sm:mb-12 ">
-        <Profile>
-          <Image
-            src={profile}
-            alt="profileImage"
-            className="w-16 rounded-full border-[1px]"
-          />
-          <span className="font-bold">{name}</span>
-        </Profile>
+      <div className="min-h-screen p-5 sm:py-10 mb-32 sm:mb-12 ">
+        <div className="flex justify-between items-center mx-10">
+          <Profile>
+            <Image
+              src={profile}
+              alt="profileImage"
+              className="w-16 rounded-full border-[1px]"
+            />
+            <span className="font-bold">{name}</span>
+          </Profile>
+          <div
+            onClick={onClickLogout}
+            className="border px-10 py-3 rounded-3xl bg-bgColor font-bold text-gray-700 cursor-pointer"
+          >
+            로그아웃
+          </div>
+        </div>
+
         <div className="relative flex flex-col items-center mt-3 mb-5 ">
           <Image
             src={pin}

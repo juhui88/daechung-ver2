@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { nameState } from "@/components/atom";
 import axios from "axios";
+import Link from "next/link";
 
 const most = [
   {
@@ -59,6 +60,7 @@ const PortfolioWrap = tw.div`
     cursor-pointer
     group
     relative
+    mb-4
 `;
 const PortfolioItem = tw.div`
     flex
@@ -128,7 +130,7 @@ const Portfolio = () => {
   }, []);
   return (
     <Layout>
-      <div className="p-5">
+      <div className="min-h-screen p-5">
         <div className=" flex items-center justify-center space-x-2 font-bold">
           <Image
             src={profile}
@@ -143,21 +145,23 @@ const Portfolio = () => {
             <PortfolioOrder>최다 작성 순</PortfolioOrder>
             <Item>
               {mostNotes.map((m, i) => (
-                <PortfolioWrap key={m.id}>
-                  <PortfolioItem>
-                    <Image
-                      src={i === 0 ? gold : i === 1 ? silber : bronze}
-                      alt="medal"
-                    />
-                    <PortfolioTitle>{m.name}</PortfolioTitle>
-                  </PortfolioItem>
-                  <PortfolioNum>총 노트 {m.count}개</PortfolioNum>
-                  <Bubble>
-                    총 노트 {m.count}개 작성, 생성 날짜:
-                    {" " + m.createdAt.slice(0, 10)}
-                    <BubbleTriangle />
-                  </Bubble>
-                </PortfolioWrap>
+                <Link href={`/notes/${m.id}`} key={m.id}>
+                  <PortfolioWrap>
+                    <PortfolioItem>
+                      <Image
+                        src={i === 0 ? gold : i === 1 ? silber : bronze}
+                        alt="medal"
+                      />
+                      <PortfolioTitle>{m.name}</PortfolioTitle>
+                    </PortfolioItem>
+                    <PortfolioNum>총 노트 {m.count}개</PortfolioNum>
+                    <Bubble>
+                      총 노트 {m.count}개 작성, 생성 날짜:
+                      {" " + m.createdAt.slice(0, 10)}
+                      <BubbleTriangle />
+                    </Bubble>
+                  </PortfolioWrap>
+                </Link>
               ))}
             </Item>
           </div>
@@ -165,16 +169,18 @@ const Portfolio = () => {
             <PortfolioOrder>최근 생성 순</PortfolioOrder>
             <Item className="px-6 space-y-6">
               {recentNotes.map((r, i) => (
-                <PortfolioWrap key={i}>
-                  <PortfolioItem>
-                    <PortfolioTitle>{r.name}</PortfolioTitle>
-                  </PortfolioItem>
-                  <PortfolioNum>{r.createdAt.slice(0, 10)} ~</PortfolioNum>
-                  <Bubble className="left-5 -top-10">
-                    총 노트 {r.count}개 작성
-                    <BubbleTriangle recent={true} />
-                  </Bubble>
-                </PortfolioWrap>
+                <Link href={`/notes/${r.id}`} key={i}>
+                  <PortfolioWrap>
+                    <PortfolioItem>
+                      <PortfolioTitle>{r.name}</PortfolioTitle>
+                    </PortfolioItem>
+                    <PortfolioNum>{r.createdAt.slice(0, 10)} ~</PortfolioNum>
+                    <Bubble className="left-5 -top-10">
+                      총 노트 {r.count}개 작성
+                      <BubbleTriangle recent={true} />
+                    </Bubble>
+                  </PortfolioWrap>
+                </Link>
               ))}
             </Item>
           </div>

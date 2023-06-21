@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import tw from "tailwind-styled-components";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
@@ -140,10 +140,13 @@ const NoteDetail = () => {
   };
 
   const onClickDelete = (noteId) => {
-    axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URL}/notes/note-id/${noteId}`)
-      .then((res) => setChange((prev) => !prev))
-      .catch((err) => console.log(err));
+    let input = confirm("삭제하시겠습니까?");
+    if (input) {
+      axios
+        .delete(`${process.env.NEXT_PUBLIC_API_URL}/notes/note-id/${noteId}`)
+        .then((res) => setChange((prev) => !prev))
+        .catch((err) => console.log(err));
+    }
   };
 
   const onValidEdit = (data) => {
@@ -177,8 +180,15 @@ const NoteDetail = () => {
         setTempNote(res.data.tempNote);
       })
       .catch((err) => console.log(err));
-  }, [change, setChange, editNoteContent]);
+  }, [change, setChange]);
 
+  useEffect(() => {
+    // editNoteId가 변경될 때마다 해당 노트의 내용을 가져와서 상태 업데이트
+    const note = notes?.find((note) => note.id === editNoteId);
+    if (note) {
+      setEditNoteContent(note.content);
+    }
+  }, [editNoteId]);
   useEffect(() => {
     messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [notes]);
@@ -190,14 +200,12 @@ const NoteDetail = () => {
           <NoteBar
             title={cateName}
             cateId={cateId}
-            content={
-              watch("content") === "" ? tempNote?.content : watch("content")
-            }
+            content={watch("content") === "" ? "" : watch("content")}
           />
 
           <div
             className={cls(
-              "space-y-7 mt-20 mb-60 px-3 mb-",
+              "space-y-7 mt-20 mb-72 px-3",
               files && Array.from(files).length ? `mb-96` : ""
             )}
           >
@@ -210,6 +218,7 @@ const NoteDetail = () => {
                       className="w-full"
                       autoFocus
                       {...register("noteContent", { value: editNoteContent })}
+                      value={editNoteContent}
                     />
                     <button ref={editBtnRef} type="submit" className="hidden">
                       수정
@@ -246,12 +255,15 @@ const NoteDetail = () => {
                 )}
               </NoteWrap>
             ))}
+            <div className="fixed top-0">
+              {editNoteId} {editNoteContent}
+            </div>
             <div ref={messageEndRef}></div>
           </div>
         </div>
 
         <div className="fixed bottom-0 sm:bottom-10 sm:w-[640px]">
-          <form onSubmit={handleSubmit(onValid)} className="relative">
+          <form onSubmit={handleSubmit(onValid)} className="relative ">
             <textarea
               onKeyDown={handleKeyDown}
               placeholder="내용을 입력하세요"
