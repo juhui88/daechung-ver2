@@ -9,6 +9,7 @@ import { useRecoilState } from "recoil";
 import { changeState } from "@/components/atom";
 import axios from "axios";
 import { cls } from "@/libs/utils";
+import EditNote from "@/components/EditNote";
 
 const NoteWrap = tw.div`
     bg-bgColor
@@ -40,7 +41,7 @@ const NoteDetail = () => {
   const files = watch("files");
   const router = useRouter();
   const btnRef = useRef();
-  const editBtnRef = useRef();
+
   const [change, setChange] = useRecoilState(changeState);
   const [notes, setNotes] = useState();
   const [cateName, setCateName] = useState();
@@ -118,21 +119,6 @@ const NoteDetail = () => {
     }
   };
 
-  const handleEditKeyDown = (e) => {
-    if (!e.shiftKey && e.key === "Enter") {
-      e.preventDefault();
-      editBtnRef.current.click();
-    } else if (e.shiftKey && e.key === "Enter") {
-      e.preventDefault();
-      const textarea = e.target;
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const value = textarea.value;
-      textarea.value = value.substring(0, start) + "\n" + value.substring(end);
-      textarea.selectionStart = textarea.selectionEnd = start + 1;
-    }
-  };
-
   const onClickEdit = (noteId, noteContent) => {
     setEditState((prev) => !prev);
     setEditNoteId(noteId);
@@ -163,6 +149,24 @@ const NoteDetail = () => {
     reset();
   };
 
+  const downloadFile = (file) => {
+    const fileUrl = file.fileUrl;
+
+    axios
+      .get(fileUrl, { responseType: "blob" })
+      .then((res) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", file.originalName); // 다운로드될 파일의 이름을 설정합니다
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/notes/main/cate-id/${cateId}`)
@@ -188,14 +192,15 @@ const NoteDetail = () => {
     if (note) {
       setEditNoteContent(note.content);
     }
-  }, [editNoteId]);
+    register("editNoteContent");
+  }, [editNoteId, register]);
   useEffect(() => {
     messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [notes]);
 
   return (
     <Layout>
-      <div className=" flex flex-col h-screen w-full">
+      <div className=" flex flex-col min-h-screen w-full">
         <div className="bg-mainColor flex-grow w-full">
           <NoteBar
             title={cateName}
@@ -205,25 +210,17 @@ const NoteDetail = () => {
 
           <div
             className={cls(
-              "space-y-7 mt-20 mb-72 px-3",
+              "space-y-7 mt-32 mb-60 px-3",
               files && Array.from(files).length ? `mb-96` : ""
             )}
           >
             {notes?.map((note, i) => (
               <NoteWrap key={i} className="text-[#545454] text-lg ">
                 {editState && note.id === editNoteId ? (
-                  <form onSubmit={handleSubmit(onValidEdit)}>
-                    <textarea
-                      onKeyDown={handleEditKeyDown}
-                      className="w-full"
-                      autoFocus
-                      {...register("noteContent", { value: editNoteContent })}
-                      value={editNoteContent}
-                    />
-                    <button ref={editBtnRef} type="submit" className="hidden">
-                      수정
-                    </button>
-                  </form>
+                  <EditNote
+                    editNoteId={editNoteId}
+                    editNoteContent={editNoteContent}
+                  />
                 ) : (
                   <NoteSpan className="whitespace-pre-line">
                     {note.content}
@@ -244,20 +241,19 @@ const NoteDetail = () => {
                   </div>
                 </div>
                 {note.__files__?.length === 0 ? null : (
-                  <div className="border-t mt-4 space-y-2">
+                  <div className="border-t mt-4 space-y-2 cursor-pointer">
                     {note.__files__?.map((f) => (
                       <div>
-                        <span>{}</span>
-                        {f.originalName}
+                        <span onClick={() => downloadFile(f)}>
+                          {f.originalName}
+                        </span>
+                        {/* 다운로드 버튼 추가 */}
                       </div>
                     ))}
                   </div>
                 )}
               </NoteWrap>
             ))}
-            <div className="fixed top-0">
-              {editNoteId} {editNoteContent}
-            </div>
             <div ref={messageEndRef}></div>
           </div>
         </div>

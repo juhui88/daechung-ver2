@@ -72,7 +72,7 @@ export default function Main() {
           </Profile>
           <div
             onClick={onClickLogout}
-            className="border px-10 py-3 rounded-3xl bg-bgColor font-bold text-gray-700 cursor-pointer"
+            className="border p-3 sm:px-10  rounded-3xl bg-bgColor font-bold text-gray-700 cursor-pointer"
           >
             로그아웃
           </div>
