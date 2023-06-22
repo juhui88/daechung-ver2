@@ -1,9 +1,14 @@
 import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
+import { changeState, editState } from "./atom";
+import axios from "axios";
 
 const EditNote = ({ editNoteId, editNoteContent }) => {
   const { register, handleSubmit, reset } = useForm();
   const editBtnRef = useRef();
+  const [change, setChange] = useRecoilState(changeState);
+  const [edit, setEdit] = useRecoilState(editState);
 
   const handleEditKeyDown = (e) => {
     if (!e.shiftKey && e.key === "Enter") {
@@ -21,13 +26,14 @@ const EditNote = ({ editNoteId, editNoteContent }) => {
   };
 
   const onValidEdit = (data) => {
+    console.log(data);
     axios
       .put(`${process.env.NEXT_PUBLIC_API_URL}/notes/note-id/${editNoteId}`, {
-        content: data.noteContent,
+        content: data.editNoteContent,
       })
       .then((res) => {
-        console.log(res);
-        setEditState(false);
+        console.log("수정", res);
+        setEdit(false);
         setChange((prev) => !prev);
       })
       .catch((err) => console.log(err));

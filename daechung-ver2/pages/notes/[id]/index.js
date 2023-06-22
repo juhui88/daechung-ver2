@@ -7,6 +7,7 @@ import NoteBar from "@/components/NoteBar";
 import moment from "moment";
 import { useRecoilState } from "recoil";
 import { changeState } from "@/components/atom";
+import { editState } from "@/components/atom";
 import axios from "axios";
 import { cls } from "@/libs/utils";
 import EditNote from "@/components/EditNote";
@@ -43,10 +44,10 @@ const NoteDetail = () => {
   const btnRef = useRef();
 
   const [change, setChange] = useRecoilState(changeState);
+  const [edit, setEdit] = useRecoilState(editState);
   const [notes, setNotes] = useState();
   const [cateName, setCateName] = useState();
 
-  const [editState, setEditState] = useState(false);
   const [editNoteId, setEditNoteId] = useState();
   const [editNoteContent, setEditNoteContent] = useState("");
   const [tempNote, setTempNote] = useState();
@@ -68,13 +69,6 @@ const NoteDetail = () => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       formData.append(`file${i}`, file);
-    }
-    for (var key of formData.keys()) {
-      console.log("폼키", key);
-    }
-
-    for (var value of formData.values()) {
-      console.log("폼밸류", value);
     }
 
     axios({
@@ -120,7 +114,7 @@ const NoteDetail = () => {
   };
 
   const onClickEdit = (noteId, noteContent) => {
-    setEditState((prev) => !prev);
+    setEdit((prev) => !prev);
     setEditNoteId(noteId);
     setEditNoteContent(noteContent);
   };
@@ -171,7 +165,7 @@ const NoteDetail = () => {
         setTempNote(res.data.tempNote);
       })
       .catch((err) => console.log(err));
-  }, [change, setChange]);
+  }, [change, setChange, edit, setEdit]);
 
   useEffect(() => {
     // editNoteId가 변경될 때마다 해당 노트의 내용을 가져와서 상태 업데이트
@@ -192,7 +186,8 @@ const NoteDetail = () => {
           <NoteBar
             title={cateName}
             cateId={cateId}
-            content={watch("content") === "" ? "" : watch("content")}
+            content={watch("content")}
+            files={watch("files")}
           />
 
           <div
@@ -203,7 +198,7 @@ const NoteDetail = () => {
           >
             {notes?.map((note, i) => (
               <NoteWrap key={i} className="text-[#545454] text-lg ">
-                {editState && note.id === editNoteId ? (
+                {edit && note.id === editNoteId ? (
                   <EditNote
                     editNoteId={editNoteId}
                     editNoteContent={editNoteContent}
@@ -250,9 +245,12 @@ const NoteDetail = () => {
             <textarea
               onKeyDown={handleKeyDown}
               placeholder="내용을 입력하세요"
-              {...register("content", { value: tempNote?.content })}
+              {...register("content")}
               className="textarea h-32 sm:h-44 w-screen sm:w-full focus:outline-none p-2 placeholder:text-sm break-all normal-nums"
-            />
+              defaultValue={tempNote?.content}
+            >
+              {}
+            </textarea>
             <label
               htmlFor="files"
               className="bg-gray-500  text-white font-bold px-5 py-1 rounded-t-xl absolute left-1 -top-8 hover:cursor-pointer"

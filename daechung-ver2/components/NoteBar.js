@@ -7,26 +7,30 @@ import { cls } from "@/libs/utils";
 import axios from "axios";
 import { headers } from "next/dist/client/components/headers";
 
-const NoteBar = ({ title, cateId, content }) => {
+const NoteBar = ({ title, cateId, content, files }) => {
   const router = useRouter();
   const [menuClick, setMenuClick] = useState(false);
   const onClickBack = () => {
-    if (content !== "") {
-      axios
-        .post(
-          `${process.env.NEXT_PUBLIC_API_URL}/temp-note/cate-id/${cateId}`,
-          {
-            content,
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            transformRequest: (data, headers) => {
-              return data;
-            },
-          }
-        )
+    if (content !== "" || Array.from(files).length !== 0) {
+      const formData = new FormData();
+      formData.append("content", content);
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        formData.append(`file${i}`, file);
+      }
+
+      axios({
+        method: "post",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/temp-note/cate-id/${cateId}`,
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formData,
+        transformRequest: (data, headers) => {
+          return data;
+        },
+      })
         .then((res) => {
-          console.log(res);
+          console.log("임시저장", res);
           alert("임시저장되었습니다");
         })
         .catch((err) => console.log(err));

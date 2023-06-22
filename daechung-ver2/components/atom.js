@@ -9,3 +9,8 @@ export const selectDayState = atom({
   key: "selectedDayState",
   default: moment(),
 });
+
+export const editState = atom({
+  key: "editState",
+  default: false,
+});
