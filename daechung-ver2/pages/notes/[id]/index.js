@@ -131,7 +131,8 @@ const NoteDetail = () => {
 
   const downloadFile = (file) => {
     console.log(file);
-    const fileUrl = file.fileUrl;
+    router.push(file.fileUrl);
+    /* const fileUrl = file.fileUrl;
 
     axios
       .get(fileUrl, { responseType: "blob" })
@@ -145,7 +146,7 @@ const NoteDetail = () => {
         link.parentNode.removeChild(link);
         console.log(res);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err)); */
   };
 
   useEffect(() => {
@@ -229,7 +230,6 @@ const NoteDetail = () => {
                         <span onClick={() => downloadFile(f)}>
                           {f.originalName}
                         </span>
-                        {/* 다운로드 버튼 추가 */}
                       </div>
                     ))}
                   </div>
